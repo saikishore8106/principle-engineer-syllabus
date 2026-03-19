@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Principal Engineer 90-Day Roadmap — AIOps & Backend Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --phase1: #1D9E75;
+    --phase1-light: #E1F5EE;
+    --phase1-mid: #0F6E56;
+    --phase2: #534AB7;
+    --phase2-light: #EEEDFE;
+    --phase2-mid: #3C3489;
+    --phase3: #D85A30;
+    --phase3-light: #FAECE7;
+    --phase3-mid: #993C1D;
+    --neutral: #888780;
+    --bg: #ffffff;
+    --bg2: #F7F6F2;
+    --border: rgba(60,60,50,0.13);
+    --text: #1a1a18;
+    --muted: #6b6a64;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg2: #252522;
+      --border: rgba(255,255,255,0.1);
+      --text: #e8e6de;
+      --muted: #9c9a92;
+      --phase1-light: #0a2e22;
+      --phase1-mid: #5DCAA5;
+      --phase2-light: #1a1840;
+      --phase2-mid: #AFA9EC;
+      --phase3-light: #2e1508;
+      --phase3-mid: #F0997B;
+    }
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ---- TOP HERO ---- */
+  .hero {
+    background: var(--bg);
+    border-bottom: 0.5px solid var(--border);
+    padding: 36px 32px 28px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .hero-inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .hero h1 {
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    letter-spacing: -0.6px;
+    line-height: 1.2;
+  }
+
+  .hero p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 5px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 14px;
+  }
+
+  .chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 11px;
+    border-radius: 20px;
+    border: 0.5px solid;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.3px;
+  }
+  .chip-g { background: var(--phase1-light); color: var(--phase1-mid); border-color: var(--phase1); }
+  .chip-p { background: var(--phase2-light); color: var(--phase2-mid); border-color: var(--phase2); }
+  .chip-o { background: var(--phase3-light); color: var(--phase3-mid); border-color: var(--phase3); }
+  .chip-n { background: var(--bg2); color: var(--muted); border-color: var(--border); }
+
+  /* ---- NAV ---- */
+  .nav-wrap {
+    border-bottom: 0.5px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 130px;
+    z-index: 90;
+  }
+
+  .nav {
+    display: flex;
+    gap: 4px;
+    padding: 10px 32px;
+    max-width: 960px;
+    margin: 0 auto;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+
+  .nav-btn {
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    border: 0.5px solid var(--border);
+    background: var(--bg2);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.18s;
+    font-family: 'Sora', sans-serif;
+  }
+  .nav-btn:hover { border-color: var(--neutral); color: var(--text); }
+  .nav-btn.active-p1 { background: var(--phase1-light); color: var(--phase1-mid); border-color: var(--phase1); font-weight: 600; }
+  .nav-btn.active-p2 { background: var(--phase2-light); color: var(--phase2-mid); border-color: var(--phase2); font-weight: 600; }
+  .nav-btn.active-p3 { background: var(--phase3-light); color: var(--phase3-mid); border-color: var(--phase3); font-weight: 600; }
+
+  /* ---- MAIN CONTENT ---- */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 28px 32px 60px;
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ---- PHASE HEADER ---- */
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    border-radius: var(--radius-lg);
+    border: 0.5px solid;
+    margin-bottom: 24px;
+  }
+  .phase-header.ph1 { background: var(--phase1-light); border-color: var(--phase1); }
+  .phase-header.ph2 { background: var(--phase2-light); border-color: var(--phase2); }
+  .phase-header.ph3 { background: var(--phase3-light); border-color: var(--phase3); }
+  .phase-header.ph-neutral { background: var(--bg2); border-color: var(--border); }
+
+  .phase-num {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; flex-shrink: 0;
+    color: #fff;
+  }
+  .ph1 .phase-num { background: var(--phase1); }
+  .ph2 .phase-num { background: var(--phase2); }
+  .ph3 .phase-num { background: var(--phase3); }
+  .ph-neutral .phase-num { background: var(--neutral); }
+
+  .phase-header-text h2 { font-size: 16px; font-weight: 600; line-height: 1.3; }
+  .ph1 .phase-header-text h2 { color: var(--phase1-mid); }
+  .ph2 .phase-header-text h2 { color: var(--phase2-mid); }
+  .ph3 .phase-header-text h2 { color: var(--phase3-mid); }
+  .ph-neutral .phase-header-text h2 { color: var(--text); }
+  .phase-header-text p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+  /* ---- WEEK GRID ---- */
+  .weeks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 640px) {
+    .weeks-grid { grid-template-columns: 1fr; }
+  }
+
+  .week-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color 0.18s, transform 0.18s;
+  }
+  .week-card:hover { border-color: var(--neutral); transform: translateY(-1px); }
+
+  .week-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px 8px;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .week-label {
+    font-size: 10px; font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.8px; text-transform: uppercase;
+  }
+  .p1 .week-label { color: var(--phase1); }
+  .p2 .week-label { color: var(--phase2); }
+  .p3 .week-label { color: var(--phase3); }
+
+  .week-title {
+    font-size: 13px; font-weight: 600;
+    padding: 10px 16px 5px;
+    line-height: 1.4;
+  }
+
+  .week-topics { padding: 0 16px 12px; }
+
+  .topic-row {
+    display: flex; align-items: flex-start;
+    gap: 7px; margin-top: 6px;
+  }
+
+  .topic-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%; margin-top: 6px; flex-shrink: 0;
+  }
+  .p1 .topic-dot { background: var(--phase1); }
+  .p2 .topic-dot { background: var(--phase2); }
+  .p3 .topic-dot { background: var(--phase3); }
+
+  .topic-text { font-size: 12px; color: var(--muted); line-height: 1.55; }
+
+  .week-footer {
+    padding: 8px 16px;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg2);
+    font-size: 11px; color: var(--muted);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .outcome-tag {
+    font-size: 10px; padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-weight: 600;
+  }
+  .p1 .outcome-tag { background: var(--phase1-light); color: var(--phase1-mid); }
+  .p2 .outcome-tag { background: var(--phase2-light); color: var(--phase2-mid); }
+  .p3 .outcome-tag { background: var(--phase3-light); color: var(--phase3-mid); }
+
+  /* ---- DAILY SECTION ---- */
+  .section-block {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+
+  .section-block h3 {
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.7px;
+    color: var(--muted); margin-bottom: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .time-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 520px) {
+    .time-grid { grid-template-columns: 1fr; }
+  }
+
+  .time-block {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 11px 13px;
+  }
+  .time-block .tb-time {
+    font-size: 10px; font-family: 'JetBrains Mono', monospace;
+    font-weight: 600; color: var(--muted); margin-bottom: 4px;
+  }
+  .time-block .tb-title { font-size: 13px; font-weight: 600; color: var(--text); }
+  .time-block .tb-sub { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+  .resources-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  @media (max-width: 480px) {
+    .resources-grid { grid-template-columns: 1fr; }
+  }
+
+  .res-card {
+    background: var(--bg2);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    font-size: 12px;
+  }
+  .res-card strong { display: block; margin-bottom: 4px; font-size: 13px; }
+  .res-card span { color: var(--muted); line-height: 1.6; }
+
+  /* ---- SKILL TRACKER ---- */
+  .skill-block { margin-bottom: 16px; }
+  .skill-block .sk-name {
+    font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px;
+  }
+  .skill-row-inner {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 4px;
+  }
+  .sk-label {
+    font-size: 10px; font-family: 'JetBrains Mono', monospace;
+    font-weight: 600; color: var(--muted); min-width: 24px;
+  }
+  .sk-track {
+    flex: 1; height: 5px; background: var(--border);
+    border-radius: 3px; overflow: hidden;
+  }
+  .sk-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.9s cubic-bezier(.22,.68,0,1.2);
+    width: 0%;
+  }
+  .sk-pct {
+    font-size: 11px; font-family: 'JetBrains Mono', monospace;
+    color: var(--muted); min-width: 32px; text-align: right;
+  }
+
+  .legend {
+    display: flex; gap: 16px; margin-top: 16px;
+    font-size: 11px; color: var(--muted);
+  }
+  .legend span {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .legend-dot {
+    width: 12px; height: 4px; border-radius: 2px; display: inline-block;
+  }
+
+  .milestone-row {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 13px; margin-bottom: 10px;
+  }
+  .m-badge {
+    width: 24px; height: 24px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; flex-shrink: 0;
+  }
+
+  .card-white {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px 20px;
+    margin-bottom: 12px;
+  }
+  .card-white h3 {
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.7px; color: var(--muted); margin-bottom: 14px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    text-align: center;
+    padding: 24px 16px;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 0.5px solid var(--border);
+  }
+  footer a { color: var(--phase2-mid); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Principal Engineer 90-Day Roadmap</h1>
+    <p>AIOps · Backend · System Design · Architecture · 12 yrs exp → L7 / Principal level</p>
+    <div class="chips">
+      <span class="chip chip-n">6–8 hrs / day</span>
+      <span class="chip chip-n">90 days</span>
+      <span class="chip chip-n">12 weeks</span>
+      <span class="chip chip-g">Phase 1 — Foundations</span>
+      <span class="chip chip-p">Phase 2 — Architecture</span>
+      <span class="chip chip-o">Phase 3 — AIOps + Leadership</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav-wrap">
+  <nav class="nav">
+    <button class="nav-btn active-p1" onclick="showPanel('p1',this,'active-p1')">Phase 1 — Foundations (Wk 1–4)</button>
+    <button class="nav-btn" onclick="showPanel('p2',this,'active-p2')">Phase 2 — Architecture (Wk 5–8)</button>
+    <button class="nav-btn" onclick="showPanel('p3',this,'active-p3')">Phase 3 — AIOps + Leadership (Wk 9–12)</button>
+    <button class="nav-btn" onclick="showPanel('daily',this,'active-p2')">Daily Schedule</button>
+    <button class="nav-btn" onclick="showPanel('skills',this,'active-p1')">Skill Tracker</button>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- PHASE 1 -->
+  <div id="p1" class="panel active">
+    <div class="phase-header ph1">
+      <div class="phase-num">1</div>
+      <div class="phase-header-text">
+        <h2>Foundations — Core Depth &amp; LLD Mastery</h2>
+        <p>Weeks 1–4 · Solidify the base that architecture decisions are built on</p>
+      </div>
+    </div>
+    <div class="weeks-grid">
+
+      <div class="week-card p1">
+        <div class="week-header"><span class="week-label">Week 01</span></div>
+        <div class="week-title">Low-Level Design (LLD) &amp; Design Patterns</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">SOLID principles — deep dives with real refactoring exercises on legacy code</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Design patterns: all 23 GoF — Creational (Factory, Builder, Singleton), Structural (Adapter, Decorator, Proxy), Behavioral (Observer, Strategy, Command)</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">OOP vs Functional tradeoffs for backend systems — when to use which</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Practice problems: Parking Lot, Library Management System, ATM Machine, Chess Board</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">UML class diagrams, sequence diagrams — write them fluently</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">LLD</span> Design any object-oriented system in 30 mins</div>
+      </div>
+
+      <div class="week-card p1">
+        <div class="week-header"><span class="week-label">Week 02</span></div>
+        <div class="week-title">Data Structures &amp; Algorithm Complexity</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Advanced trees: B-Tree, B+ Tree, LSM Tree, Trie, Segment Tree — real-world use contexts</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Graphs: BFS/DFS, Dijkstra, Bellman-Ford, topological sort in system design contexts</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Consistent hashing, bloom filters, skip lists, HyperLogLog</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Amortized complexity, space-time tradeoffs at scale</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">When to use which structure — interview-level decision-making</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">DSA</span> Explain complexity tradeoffs to any audience</div>
+      </div>
+
+      <div class="week-card p1">
+        <div class="week-header"><span class="week-label">Week 03</span></div>
+        <div class="week-title">Database Design — Deep Dive</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Normalization 1NF–5NF, denormalization strategies for read-heavy systems</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Indexing: B-Tree, Hash, Composite, Partial, Covering, GIN/GiST indexes</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">ACID vs BASE, isolation levels (Read Committed, Serializable), MVCC internals</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Query optimization, EXPLAIN plans, N+1 problem, connection pooling</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Schema design for e-commerce, SaaS multi-tenancy, time-series, audit logs</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">PostgreSQL internals: WAL, vacuum, autovacuum tuning</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">DB</span> ERD design + query plan review proficiency</div>
+      </div>
+
+      <div class="week-card p1">
+        <div class="week-header"><span class="week-label">Week 04</span></div>
+        <div class="week-title">Concurrency, OS &amp; Networking Depth</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Threads vs processes, coroutines, async I/O — epoll, io_uring, event loops</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Locks, mutexes, semaphores, deadlock detection, prevention &amp; recovery</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">TCP/IP internals, HTTP/2, HTTP/3 (QUIC), gRPC, WebSockets — when to use what</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">TLS/mTLS handshake, DNS internals, latency anatomy (RTT, TTFB)</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Practice: Build a concurrent rate limiter (token bucket + sliding window) from scratch</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">SYS</span> Confident in OS-level performance discussions</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div id="p2" class="panel">
+    <div class="phase-header ph2">
+      <div class="phase-num">2</div>
+      <div class="phase-header-text">
+        <h2>System Architecture — HLD &amp; Distributed Systems</h2>
+        <p>Weeks 5–8 · Think in systems, design for scale, reason about failure</p>
+      </div>
+    </div>
+    <div class="weeks-grid">
+
+      <div class="week-card p2">
+        <div class="week-header"><span class="week-label">Week 05</span></div>
+        <div class="week-title">High-Level Design (HLD) Framework</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Capacity estimation: QPS, storage, bandwidth, memory — back-of-napkin math fluency</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Load balancing: L4 vs L7, algorithms (round-robin, least-conn, consistent hashing rings)</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">CDN design, DNS-based routing, anycast, GeoDNS</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">API Gateway patterns, rate limiting, circuit breaker, bulkhead</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Design: URL shortener (bit.ly), Pastebin, Dropbox, Google Drive at scale</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">HLD</span> 45-min design interview simulation — pass rate</div>
+      </div>
+
+      <div class="week-card p2">
+        <div class="week-header"><span class="week-label">Week 06</span></div>
+        <div class="week-title">Distributed Systems &amp; Consensus</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">CAP theorem, PACELC model, partition tolerance in practice</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Raft consensus algorithm (deep), Paxos concepts, leader election patterns</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Vector clocks, CRDTs, last-write-wins, eventual consistency patterns</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">2-Phase Commit, Saga pattern (choreography vs orchestration), distributed transactions</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Design: distributed lock service, leader election, global ID generator (Snowflake)</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Paper reading: Amazon Dynamo, Google Spanner, Raft paper</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">DIST</span> Deep dive into distributed systems papers</div>
+      </div>
+
+      <div class="week-card p2">
+        <div class="week-header"><span class="week-label">Week 07</span></div>
+        <div class="week-title">Microservices, Messaging &amp; Event-Driven</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Microservices vs monolith vs modular monolith — decision framework with real tradeoffs</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Kafka internals: partitions, offsets, consumer groups, ISR, replication, compaction</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Event sourcing, CQRS, outbox pattern, transactional inbox</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Service mesh: Istio/Envoy, sidecar pattern, circuit breakers, retries, timeouts</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Design: Notification system (push/SMS/email), ride-sharing real-time backend</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">MSG</span> Kafka + event-driven architecture design</div>
+      </div>
+
+      <div class="week-card p2">
+        <div class="week-header"><span class="week-label">Week 08</span></div>
+        <div class="week-title">Caching, Search &amp; Storage Systems</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Cache topologies: cache-aside, write-through, write-back, refresh-ahead — when to use each</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Redis internals: data structures, persistence (RDB/AOF), cluster mode, Lua scripting</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Elasticsearch: inverted index internals, sharding, relevance tuning, aggregations</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">NoSQL: Cassandra data modeling (partition key design), DynamoDB access patterns</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Design: Twitter timeline (fan-out on write vs read), YouTube video storage pipeline</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">CACHE</span> Multi-tier caching architecture design</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div id="p3" class="panel">
+    <div class="phase-header ph3">
+      <div class="phase-num">3</div>
+      <div class="phase-header-text">
+        <h2>AIOps, Platform Engineering &amp; Principal Mindset</h2>
+        <p>Weeks 9–12 · Lead technical direction, AI-native systems, engineering excellence</p>
+      </div>
+    </div>
+    <div class="weeks-grid">
+
+      <div class="week-card p3">
+        <div class="week-header"><span class="week-label">Week 09</span></div>
+        <div class="week-title">AIOps Foundations &amp; MLOps Pipeline</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">AIOps framework: anomaly detection on metrics/logs, root cause analysis, noise reduction</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">MLOps: model training pipelines, feature stores, model registry, A/B deployment</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">LLM integration patterns: RAG architecture, vector databases (Pinecone, Weaviate, pgvector)</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Observability AI: intelligent alerting, auto-remediation, predictive scaling</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Design: end-to-end AIOps observability platform — ingest → detect → alert → remediate</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">AIOPS</span> Design a full AIOps observability platform</div>
+      </div>
+
+      <div class="week-card p3">
+        <div class="week-header"><span class="week-label">Week 10</span></div>
+        <div class="week-title">Cloud-Native &amp; Platform Architecture</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Kubernetes architecture: etcd, scheduler, kubelet, controllers, operators, CRDs</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Platform engineering: Internal Developer Platforms (IDP), Golden paths, Backstage</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Multi-region active-active deployments, chaos engineering (Chaos Monkey)</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Cost engineering: FinOps principles, rightsizing, spot instances strategy, reserved capacity</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Security architecture: Zero Trust, SPIFFE/SPIRE, secrets management (Vault), supply chain</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">CLOUD</span> K8s + platform design whiteboard review</div>
+      </div>
+
+      <div class="week-card p3">
+        <div class="week-header"><span class="week-label">Week 11</span></div>
+        <div class="week-title">Reliability, SRE &amp; Performance Engineering</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">SLO / SLI / Error budget discipline — how to set them, own them, and fight for them</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Distributed tracing: OpenTelemetry, Jaeger, correlation IDs, trace sampling</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Performance profiling: CPU flamegraphs (perf, async-profiler), memory heap analysis</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Incident management: blameless post-mortems, runbook automation, toil reduction</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Load testing at scale: k6, Locust, capacity planning spreadsheets</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">SRE</span> Design a 99.99% uptime architecture with runbooks</div>
+      </div>
+
+      <div class="week-card p3">
+        <div class="week-header"><span class="week-label">Week 12</span></div>
+        <div class="week-title">Principal Eng Skills + Capstone Project</div>
+        <div class="week-topics">
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Architecture Decision Records (ADRs), RFC writing, technical proposal documents</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Tech radar, make vs buy vs adopt decisions, vendor evaluation frameworks</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Influencing without authority, stakeholder alignment, technical roadmapping</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">Capstone: Full system design for 10M users with AIOps layer — peer review session</div></div>
+          <div class="topic-row"><div class="topic-dot"></div><div class="topic-text">60-min architecture presentation: defend every decision under cross-examination</div></div>
+        </div>
+        <div class="week-footer"><span class="outcome-tag">LEAD</span> Deliver principal-level architecture presentation</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DAILY SCHEDULE -->
+  <div id="daily" class="panel">
+    <div class="phase-header ph2">
+      <div class="phase-num">⏱</div>
+      <div class="phase-header-text">
+        <h2>Daily Study Schedule — 6–8 Hours Structure</h2>
+        <p>Repeatable daily rhythm for maximum retention and skill building</p>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <h3>Morning Block — Deep Theory (3 hrs)</h3>
+      <div class="time-grid">
+        <div class="time-block">
+          <div class="tb-time">07:00 – 08:30</div>
+          <div class="tb-title">Concept Study</div>
+          <div class="tb-sub">Read + take notes on that week's core topic. Books, papers, official docs.</div>
+        </div>
+        <div class="time-block">
+          <div class="tb-time">08:30 – 09:30</div>
+          <div class="tb-title">Video Deep-dive</div>
+          <div class="tb-sub">MIT OCW, DDIA chapters, conference talks (re:Invent, QCon, StrangeLoop)</div>
+        </div>
+        <div class="time-block">
+          <div class="tb-time">09:30 – 10:00</div>
+          <div class="tb-title">Active Recall</div>
+          <div class="tb-sub">Write summary from memory. Anki flashcards. No peeking at notes.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <h3>Afternoon Block — Hands-on Practice (3 hrs)</h3>
+      <div class="time-grid">
+        <div class="time-block">
+          <div class="tb-time">11:00 – 12:30</div>
+          <div class="tb-title">Design Exercise</div>
+          <div class="tb-sub">Whiteboard system design. Time-boxed 45 min, then self-critique vs model answer.</div>
+        </div>
+        <div class="time-block">
+          <div class="tb-time">12:30 – 13:00</div>
+          <div class="tb-title">Lunch + Walk</div>
+          <div class="tb-sub">No screens. Let concepts consolidate. Physical reset is non-negotiable.</div>
+        </div>
+        <div class="time-block">
+          <div class="tb-time">14:00 – 15:30</div>
+          <div class="tb-title">Coding / Labs</div>
+          <div class="tb-sub">Implement a component: rate limiter, cache, Kafka consumer, Redis cluster locally.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <h3>Evening Block — Review + Output (2 hrs)</h3>
+      <div class="time-grid">
+        <div class="time-block">
+          <div class="tb-time">16:00 – 17:00</div>
+          <div class="tb-title">Mock Interview</div>
+          <div class="tb-sub">Leetcode system design, or Pramp peer session (2–3× per week). Record yourself.</div>
+        </div>
+        <div class="time-block">
+          <div class="tb-time">17:00 – 18:00</div>
+          <div class="tb-title">Write + Publish</div>
+          <div class="tb-sub">Blog post, ADR, or design doc. Writing output is what separates principal engineers.</div>
+        </div>
+        <div class="time-block">
+          <div class="tb-time">18:00 – 18:30</div>
+          <div class="tb-title">Weekly Retro (Fri)</div>
+          <div class="tb-sub">What clicked? What didn't? Adjust next week's pacing accordingly.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <h3 style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.7px;color:var(--muted);margin-bottom:12px;font-family:'JetBrains Mono',monospace;">Key Resources</h3>
+      <div class="resources-grid">
+        <div class="res-card">
+          <strong>📚 Books</strong>
+          <span>Designing Data-Intensive Apps (Kleppmann) · Clean Architecture (Martin) · System Design Interview Vol 1+2 (Alex Xu) · The Staff Engineer's Path</span>
+        </div>
+        <div class="res-card">
+          <strong>🎯 Practice Platforms</strong>
+          <span>Leetcode (DB + design) · Excalidraw whiteboard · Pramp peer interviews · GitHub portfolio of design docs</span>
+        </div>
+        <div class="res-card">
+          <strong>📄 Must-Read Papers</strong>
+          <span>Dynamo (Amazon) · Bigtable (Google) · MapReduce · Spanner · Raft · Kafka · Chubby · Chord DHT · HDFS</span>
+        </div>
+        <div class="res-card">
+          <strong>🧪 Hands-on Labs</strong>
+          <span>Docker + K8s local cluster · Kafka Docker Compose · PostgreSQL perf lab · Redis cluster setup · Prometheus + Grafana stack</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SKILL TRACKER -->
+  <div id="skills" class="panel">
+    <div class="phase-header ph-neutral">
+      <div class="phase-num">≡</div>
+      <div class="phase-header-text">
+        <h2>90-Day Skill Progression</h2>
+        <p>Expected proficiency level at end of each month (0–100%)</p>
+      </div>
+    </div>
+
+    <div class="card-white">
+      <h3>Skill Level Progression by Month</h3>
+      <div id="skill-bars"></div>
+      <div class="legend">
+        <span><span class="legend-dot" style="background:#9FE1CB"></span>Month 1</span>
+        <span><span class="legend-dot" style="background:#AFA9EC"></span>Month 2</span>
+        <span><span class="legend-dot" style="background:#F0997B"></span>Month 3</span>
+      </div>
+    </div>
+
+    <div class="card-white">
+      <h3>Monthly Milestone Benchmarks</h3>
+      <div class="milestone-row">
+        <div class="m-badge" style="background:var(--phase1-light);color:var(--phase1-mid);">M1</div>
+        <div><strong>Month 1 goal:</strong> <span style="color:var(--muted)">Can design any LLD problem fluently. Writes clean UML. Comfortable defending DB schema and query optimization decisions in a whiteboard session.</span></div>
+      </div>
+      <div class="milestone-row">
+        <div class="m-badge" style="background:var(--phase2-light);color:var(--phase2-mid);">M2</div>
+        <div><strong>Month 2 goal:</strong> <span style="color:var(--muted)">Can design distributed systems for 10M+ users. Speaks Kafka, Redis, Cassandra confidently. Passes senior/L6 HLD bar at FAANG-equivalent.</span></div>
+      </div>
+      <div class="milestone-row">
+        <div class="m-badge" style="background:var(--phase3-light);color:var(--phase3-mid);">M3</div>
+        <div><strong>Month 3 goal:</strong> <span style="color:var(--muted)">Leads architecture reviews. Designs AIOps platforms end-to-end. Writes ADRs and RFCs. Presents to C-suite. Passes L7/Principal engineering bar.</span></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>Principal Engineer 90-Day Roadmap · Generated by CodeNetra · <a href="https://codenetra,com" target="_blank">claude.ai</a></p>
+</footer>
+
+<script>
+  // Panel navigation
+  function showPanel(id, btn, activeClass) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active-p1','active-p2','active-p3'));
+    btn.classList.add(activeClass);
+    if (id === 'skills') renderSkills();
+  }
+
+  // Skill bar data
+  const skills = [
+    { name: 'LLD / Design Patterns',   m1: 82, m2: 91, m3: 96 },
+    { name: 'Database Design',          m1: 76, m2: 88, m3: 93 },
+    { name: 'HLD / System Design',      m1: 42, m2: 83, m3: 94 },
+    { name: 'Distributed Systems',      m1: 36, m2: 80, m3: 91 },
+    { name: 'Kafka / Event-Driven',     m1: 30, m2: 79, m3: 89 },
+    { name: 'Kubernetes / Cloud-Native',m1: 28, m2: 66, m3: 87 },
+    { name: 'AIOps / MLOps',            m1: 20, m2: 46, m3: 84 },
+    { name: 'SRE / Observability',      m1: 36, m2: 62, m3: 88 },
+    { name: 'Tech Leadership / RFCs',   m1: 42, m2: 60, m3: 86 },
+  ];
+
+  const months = [
+    { key: 'm1', color: '#9FE1CB', label: 'M1' },
+    { key: 'm2', color: '#AFA9EC', label: 'M2' },
+    { key: 'm3', color: '#F0997B', label: 'M3' },
+  ];
+
+  let skillsRendered = false;
+  function renderSkills() {
+    if (skillsRendered) return;
+    skillsRendered = true;
+    const container = document.getElementById('skill-bars');
+    skills.forEach(s => {
+      const block = document.createElement('div');
+      block.className = 'skill-block';
+      block.innerHTML = `<div class="sk-name">${s.name}</div>`;
+      months.forEach(m => {
+        const row = document.createElement('div');
+        row.className = 'skill-row-inner';
+        row.innerHTML = `
+          <span class="sk-label">${m.label}</span>
+          <div class="sk-track"><div class="sk-fill" data-pct="${s[m.key]}" style="background:${m.color}"></div></div>
+          <span class="sk-pct">${s[m.key]}%</span>
+        `;
+        block.appendChild(row);
+      });
+      container.appendChild(block);
+    });
+    setTimeout(() => {
+      document.querySelectorAll('.sk-fill').forEach(el => {
+        el.style.width = el.dataset.pct + '%';
+      });
+    }, 100);
+  }
+</script>
+
+</body>
+</html>
